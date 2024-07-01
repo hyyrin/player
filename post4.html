@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Rin's Blog - Learning</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Theme CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .highlight {
+            background-color: rgb(0, 255, 242);
+            padding: 0 2px; /* 適當的內邊距來模仿螢光筆效果 */
+        }
+    </style>
+
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+</head>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+               
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="index.html">Home</a>
+                    </li>
+                   
+                    <li>
+                        <a href="categories.html">Categories</a>
+                    </li>
+
+                   <li>
+                        <a href="about.html">About</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <!-- Page Header -->
+    <!-- Set your background image for this header on the line below. -->
+    <header class="intro-header" style="background-image: url('img/post_4.jpg')">
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="page-heading">
+                       <h1>Birthday Paradox</h1>
+                       <h2 class="subheading">由機率經典問題Birthday Paradox延伸探討密碼學Birthday Attack</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h2>Birthday Paradox</h2>
+                <h3>介紹</h3>
+                <p>Birthday Paradox描述了一個看似違反直覺的機率論現象：在一個由隨機選取的人組成的群體中，只需要23個人，就有超過50%的機率至少有兩個人在同一天過生日。這個機率隨著人數的增加而迅速增長，在70人時，這個機率超過99.9%。</p>
+                <h3>假設</h3>
+                <p>假設一年為365天（不考慮閨年）且排除雙胞胎等特殊因素</p>
+                <h3>正文</h3>
+                <p>我們通常會認為，在一個小群體中找到兩個人具有相同生日的機率是低的，因為一年有365天，似乎需要很多人才能增加重複的機率。然而，實際的數學計算結果與我們的直覺有很大的差異。要注意的是問題不是只考慮某一個人與其他人生日相同的機率，因為其他人之間彼此也有可能生日會相同。</p>
+                <p>首先我們可以先求出每個人的生日都不相同的機率$$\overline p(x) = 1 \cdot (1 - \frac{1}{365}) \cdot (1 - \frac{2}{365}) \cdot \cdot \cdot (1 - \frac{x - 1}{365}) = \frac{365 \cdot 364 \cdot \cdot \cdot (365 -x + 1)}{365^x} = \frac{365!}{365^x \cdot (365-x)!}$$</p>
+                <p>因此至少有兩個人的生日相同的機率$$p(x)=1 - \overline p(x)$$</p>
+                <p>此外，$$for \ x \lt\lt 1 我們可以近似e^{x} \approx 1 + x，因此e^{-\frac{x}{365}} \approx 1 - \frac{x}{365} \Rightarrow \overline p(x) \approx e^{-\frac{0}{365}} \cdot e^{-\frac{1}{365}} \cdot \cdot \cdot e^{-\frac{x-1}{365}} $$</p>
+                <p>$$= e^{-\frac{1+2+...+(x-1)}{365}} = e^{-\frac{x \cdot (x-1)}{365 \cdot 2}} \Rightarrow p(x) \approx 1 - e^{-\frac{x \cdot (x - 1)}{730}} \approx 1 - e^{-\frac{x^2}{730}}$$</p>
+                <p>解不等式$$1 - e^{-\frac{x^2}{730}} = \frac{1}{2} \Rightarrow x^2 = 730ln2 \Rightarrow x \approx 22.49 \rightarrow 23人，與我們直觀上有很大的差別。$$</p>
+                <p>接著我們可以用以上推得的結果當作一個機率模型$$p(x) = 1 - e^{-\frac{x^2}{2d}}$$套用在其他問題上，這邊我們來討論駭客攻擊中常用的一個手段叫做Birthday Attack。</p>
+                <h2>Birthday Attack</h2>
+                <h3>介紹</h3>
+                <p>Birthday Attack是一種針對加密函數的密碼學攻擊方法。這種攻擊利用了Birthday Paradox中的數學原理，即在一個足夠大的集合中，某兩個元素隨機選取時具有相同特性（例如生日）的機率意外地高。在Birthday Attack的情境中，這種相同特性指的是不同的輸入值對於一個加密函數產生相同的輸出值。</p>
+                <h3>正文</h3>
+                <p>當一個私鑰的長度為n位元，攻擊者會一直不斷的生成長度為n位元的輸入，經過加密函數後會產生一組長度n位元的輸出，且總共有$$2^n個可能，一般來說要找到特定的輸出值平均要嘗試2^n次$$，但要找到任意一對碰撞也就是不同的輸入值經過加密函數產生一樣的輸出值</p>
+                <p>根據Birthday Paradox，若碰撞機率為50%，平均只要嘗試$$2^{\frac{n}{2}}次$$</p>
+                    <p>理由如下：
+                    我們套用Birthday Paradox機率模型$$p = 1 - e^{-\frac{x^2}{2d}}，p是碰撞機率, d是所有可能的輸出數$$ </p>
+                <p>$$\Rightarrow x = \sqrt d \cdot \sqrt{2\cdot ln\frac{1}{1-p}} \Rightarrow when \ p=0.5 \ and \ d=2^n \Rightarrow x \approx 2^{\frac{n}{2}} 量級$$</p>
+                </p>
+                
+                <h2> Reference </h2>
+                <a href ="https://zh.wikipedia.org/zh-tw/%E7%94%9F%E6%97%A5%E5%95%8F%E9%A1%8C">https://zh.wikipedia.org/zh-tw/%E7%94%9F%E6%97%A5%E5%95%8F%E9%A1%8C</a>
+                <a href ="https://brilliant.org/wiki/birthday-paradox/">https://brilliant.org/wiki/birthday-paradox/</a>
+                <a href ="https://www.javatpoint.com/birthday-attack-in-cryptography">https://www.javatpoint.com/birthday-attack-in-cryptography</a>
+                <a href ="https://zh.wikipedia.org/zh-tw/%E7%94%9F%E6%97%A5%E6%94%BB%E5%87%BB">https://zh.wikipedia.org/zh-tw/%E7%94%9F%E6%97%A5%E6%94%BB%E5%87%BB</a>
+                
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                       
+                        <li>
+                            <a href="https://github.com/Willntucsie">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Rin 2024</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+
+    <!-- Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+</body>
+
+</html>
