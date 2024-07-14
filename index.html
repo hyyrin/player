@@ -2,30 +2,37 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
-    <title>Rin's Blog</title>
-
+    <title>Rin's Blog - Anime</title>
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
     <!-- Theme CSS -->
     <link href="css/clean-blog.min.css" rel="stylesheet">
-
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .highlight {
+            background-color: rgb(0, 255, 242);
+            padding: 0 2px;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 
 <body>
-
     <!-- Navigation -->
     <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
         <div class="container-fluid">
@@ -35,108 +42,60 @@
                     <span class="sr-only">Toggle navigation</span>
                     Menu <i class="fa fa-bars"></i>
                 </button>
-                <!--<a class="navbar-brand" href="index.html">Start Bootstrap</a> -->
             </div>
-
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="index.html">Home</a>
-                    </li>
-                    
-                    <li>
-                        <a href="categories.html">Categories</a>
-                    </li>
-                    
-                    <li>
-                        <a href="about.html">About</a>
-                    </li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="categories.html">Categories</a></li>
+                    <li><a href="about.html">About</a></li>
                 </ul>
             </div>
             <!-- /.navbar-collapse -->
         </div>
         <!-- /.container -->
     </nav>
-
     <!-- Page Header -->
-    <!-- Set your background image for this header on the line below. -->
     <header class="intro-header" style="background-image: url('img/moon.jpg')">
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                    <div class="site-heading">
-                        <h1>Rin's Blog</h1>
-                        <hr class="small">
-                        <span class="subheading">Just write something</span>
+                    <div class="page-heading">
+                        <h1>2024 4月新番</h1>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-
     <!-- Main Content -->
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-preview">
-                    <a href="post4.html">
-                        <h2 class="post-title">
-                            Birthday Paradox
-                        </h2>
-                        <h3 class="post-subtitle">
-                            由機率經典問題Birthday Paradox延伸探討密碼學Birthday Attack
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted on June 28, 2024</p>
-                </div>
-                <hr>
-
-                <div class="post-preview">
-                    <a href="post3.html">
-                        <h2 class="post-title">
-                            2024 春番
-                        </h2>
-                        <h3 class="post-subtitle">
-                            寫一些對於這季動畫的感想
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted on June 27, 2024</p>
-                </div>
-                <hr>
-
-                <div class="post-preview">
-                    <a href="post1.html">
-                        <h2 class="post-title">
-                            大二下修課紀錄 (112-2)
-                        </h2>
-                        <h3 class="post-subtitle">
-                            Course Experience
-                        </h3>
-                    </a>
-                    <p class="post-meta">Posted on June 27, 2024</p>
-                </div>
-                <hr>
-        
-                <!-- Pager -->
-                <ul class="pager">
-                    <li class="next">
-                        <a href="#">Older Posts &rarr;</a>
-                    </li>
-                </ul>
+                <h2>個人排名</h2>
+                <li>T0:</li>
+                <p>為美好世界獻上祝福Season3（每集都讓我笑到肚子痛）</p>
+                <li><b>T1:</b></li>
+                <li><b>T2:</b></li>
+                <h2>個人覺得好聽的OP/ED</h2>
             </div>
         </div>
     </div>
-
     <hr>
-
+    <div style="margin-left: 230px;">
+        <audio id="audioPlayer" controls autoplay>
+            <source src="mp4/1.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+        <ul id="playlist">
+            <!-- 播放列表 -->
+        </ul>
+    </div>
     <!-- Footer -->
     <footer>
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <ul class="list-inline text-center">
-                        
                         <li>
                             <a href="https://github.com/Willntucsie">
                                 <span class="fa-stack fa-lg">
@@ -151,20 +110,46 @@
             </div>
         </div>
     </footer>
-
     <!-- jQuery -->
     <script src="vendor/jquery/jquery.min.js"></script>
-
     <!-- Bootstrap Core JavaScript -->
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-
     <!-- Contact Form JavaScript -->
     <script src="js/jqBootstrapValidation.js"></script>
     <script src="js/contact_me.js"></script>
-
     <!-- Theme JavaScript -->
     <script src="js/clean-blog.min.js"></script>
 
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playlist = [
+            { src: 'mp4/1.mp3', name: '曲目 1' },
+            { src: 'mp4/2.mp3', name: '曲目 2' }
+            // 這裡可以繼續添加更多的歌曲
+        ];
+        let currentTrack = 0;
+
+        const playlistElement = document.getElementById('playlist');
+        playlist.forEach((track, index) => {
+            const li = document.createElement('li');
+            li.textContent = track.name;
+            li.addEventListener('click', () => {
+                currentTrack = index;
+                audioPlayer.src = track.src;
+                audioPlayer.play();
+            });
+            playlistElement.appendChild(li);
+        });
+
+        audioPlayer.addEventListener('ended', function() {
+            currentTrack++;
+            if (currentTrack >= playlist.length) {
+                currentTrack = 0;
+            }
+            audioPlayer.src = playlist[currentTrack].src;
+            audioPlayer.play();
+        });
+    </script>
 </body>
 
 </html>
