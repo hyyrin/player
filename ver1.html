@@ -20,14 +20,12 @@
             background-color: rgb(0, 255, 242);
             padding: 0 2px;
         }
-        .playlist-container {
-            margin-left: 0; /* 將容器的左邊距設為0 */
-        }
         .playlist-item {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
             font-size: 1.5em;
+            justify-content: flex-start;
         }
         .playlist-item img {
             margin-right: 20px;
@@ -77,19 +75,23 @@
         </div>
     </header>
     <!-- Main Content -->
-    <div class="container playlist-container">
+    <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <h2>個人的音樂播放清單</h2>
-                <audio id="audioPlayer" controls autoplay style="width: 100%; height: 50px; border-radius: 12px;">
-                    <source src="mp3/Butterfly.mp3" type="audio/mp3">
-                    Your browser does not support the audio element.
-                </audio>
-                <ul id="playlist">
-                    <!-- 播放列表 -->
-                </ul>
             </div>
         </div>
+    </div>
+    <hr>
+    <div style="margin-left: 230px;">
+        <audio id="audioPlayer" controls autoplay style="width: 80%; height: 50px; border-radius: 12px;">
+            <source src="mp3/Butterfly.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+       
+        <ul id="playlist">
+            <!-- 播放列表 -->
+        </ul>
     </div>
     <!-- Footer -->
     <footer>
