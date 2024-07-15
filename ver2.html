@@ -122,16 +122,6 @@
     <script src="js/clean-blog.min.js"></script>
 
     <script>
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js')
-            .then(function(registration) {
-                console.log('Service Worker registered with scope:', registration.scope);
-            })
-            .catch(function(error) {
-                console.log('Service Worker registration failed:', error);
-            });
-        }
-
         const audioPlayer = document.getElementById('audioPlayer');
         const playlist = [
             { src: 'mp3/1.mp3', name: 'Butterfly', artist: 'yuiko', img: 'img/Butterfly.jpg' },
@@ -146,46 +136,6 @@
 
         const playlistElement = document.getElementById('playlist');
         const colorThief = new ColorThief();
-
-        function setMediaSession(track) {
-            if ('mediaSession' in navigator) {
-                navigator.mediaSession.metadata = new MediaMetadata({
-                    title: track.name,
-                    artist: track.artist,
-                    album: 'My Playlist',
-                    artwork: [
-                        { src: track.img, sizes: '96x96', type: 'image/png' },
-                        { src: track.img, sizes: '128x128', type: 'image/png' },
-                        { src: track.img, sizes: '192x192', type: 'image/png' },
-                        { src: track.img, sizes: '256x256', type: 'image/png' },
-                        { src: track.img, sizes: '384x384', type: 'image/png' },
-                        { src: track.img, sizes: '512x512', type: 'image/png' },
-                    ]
-                });
-
-                navigator.mediaSession.setActionHandler('play', () => {
-                    audioPlayer.play();
-                });
-
-                navigator.mediaSession.setActionHandler('pause', () => {
-                    audioPlayer.pause();
-                });
-
-                navigator.mediaSession.setActionHandler('previoustrack', () => {
-                    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
-                    audioPlayer.src = playlist[currentTrack].src;
-                    audioPlayer.play();
-                    setMediaSession(playlist[currentTrack]);
-                });
-
-                navigator.mediaSession.setActionHandler('nexttrack', () => {
-                    currentTrack = (currentTrack + 1) % playlist.length;
-                    audioPlayer.src = playlist[currentTrack].src;
-                    audioPlayer.play();
-                    setMediaSession(playlist[currentTrack]);
-                });
-            }
-        }
 
         playlist.forEach((track, index) => {
             const li = document.createElement('li');
@@ -215,9 +165,7 @@
                 currentTrack = index;
                 audioPlayer.src = track.src;
                 audioPlayer.play();
-                setMediaSession(track);
             });
-
             playlistElement.appendChild(li);
         });
 
@@ -228,11 +176,6 @@
             }
             audioPlayer.src = playlist[currentTrack].src;
             audioPlayer.play();
-            setMediaSession(playlist[currentTrack]);
-        });
-
-        audioPlayer.addEventListener('play', () => {
-            setMediaSession(playlist[currentTrack]);
         });
     </script>
 </body>
