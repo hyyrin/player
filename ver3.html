@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Rin's Music Playlist</title>
+    <title>Rin's Blog - Anime</title>
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Theme CSS -->
@@ -43,20 +43,6 @@
         .playlist-item .info {
             font-size: 0.7em;
         }
-        .now-playing {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .now-playing img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            margin-right: 20px;
-        }
-        .now-playing-info {
-            font-size: 1.2em;
-        }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
@@ -84,8 +70,7 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <div class="page-heading">
-                        <h1>Rin's Music Playlist</h1>
-                        <span class="subheading">Personal Music Playlist</span>
+                        <h1>音樂播放清單</h1>
                     </div>
                 </div>
             </div>
@@ -95,14 +80,7 @@
     <div class="container playlist-container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                
-                <div class="now-playing">
-                    <img id="nowPlayingImg" src="img/Butterfly.jpg" alt="Now Playing">
-                    <div class="now-playing-info">
-                        <div id="nowPlayingTitle">Butterfly</div>
-                        <div id="nowPlayingArtist">yuiko</div>
-                    </div>
-                </div>
+                <h2>個人的音樂播放清單</h2>
                 <audio id="audioPlayer" controls autoplay style="width: 100%; height: 50px; border-radius: 12px;">
                     <source src="mp3/Butterfly.mp3" type="audio/mp3">
                     Your browser does not support the audio element.
@@ -144,6 +122,16 @@
     <script src="js/clean-blog.min.js"></script>
 
     <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+            .then(function(registration) {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(function(error) {
+                console.log('Service Worker registration failed:', error);
+            });
+        }
+
         const audioPlayer = document.getElementById('audioPlayer');
         const playlist = [
             { src: 'mp3/1.mp3', name: 'Butterfly', artist: 'yuiko', img: 'img/Butterfly.jpg' },
@@ -158,28 +146,38 @@
 
         const playlistElement = document.getElementById('playlist');
         const colorThief = new ColorThief();
-        const nowPlayingImg = document.getElementById('nowPlayingImg');
-        const nowPlayingTitle = document.getElementById('nowPlayingTitle');
-        const nowPlayingArtist = document.getElementById('nowPlayingArtist');
 
         function setMediaSession(track) {
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: track.name,
                     artist: track.artist,
+                    album: 'My Playlist',
                     artwork: [
+                        { src: track.img, sizes: '96x96', type: 'image/png' },
+                        { src: track.img, sizes: '128x128', type: 'image/png' },
+                        { src: track.img, sizes: '192x192', type: 'image/png' },
+                        { src: track.img, sizes: '256x256', type: 'image/png' },
+                        { src: track.img, sizes: '384x384', type: 'image/png' },
                         { src: track.img, sizes: '512x512', type: 'image/png' },
                     ]
                 });
 
-                navigator.mediaSession.setActionHandler('play', () => { audioPlayer.play(); });
-                navigator.mediaSession.setActionHandler('pause', () => { audioPlayer.pause(); });
+                navigator.mediaSession.setActionHandler('play', () => {
+                    audioPlayer.play();
+                });
+
+                navigator.mediaSession.setActionHandler('pause', () => {
+                    audioPlayer.pause();
+                });
+
                 navigator.mediaSession.setActionHandler('previoustrack', () => {
                     currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
                     audioPlayer.src = playlist[currentTrack].src;
                     audioPlayer.play();
                     setMediaSession(playlist[currentTrack]);
                 });
+
                 navigator.mediaSession.setActionHandler('nexttrack', () => {
                     currentTrack = (currentTrack + 1) % playlist.length;
                     audioPlayer.src = playlist[currentTrack].src;
@@ -187,10 +185,6 @@
                     setMediaSession(playlist[currentTrack]);
                 });
             }
-
-            nowPlayingImg.src = track.img;
-            nowPlayingTitle.textContent = track.name;
-            nowPlayingArtist.textContent = track.artist;
         }
 
         playlist.forEach((track, index) => {
@@ -223,6 +217,7 @@
                 audioPlayer.play();
                 setMediaSession(track);
             });
+
             playlistElement.appendChild(li);
         });
 
@@ -236,8 +231,9 @@
             setMediaSession(playlist[currentTrack]);
         });
 
-        // 初始化顯示第一首歌曲的信息
-        setMediaSession(playlist[currentTrack]);
+        audioPlayer.addEventListener('play', () => {
+            setMediaSession(playlist[currentTrack]);
+        });
     </script>
 </body>
 </html>
