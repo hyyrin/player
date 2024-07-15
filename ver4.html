@@ -61,22 +61,6 @@
             margin-right: 20px;
             font-weight: bold;
         }
-        .audio-container {
-            display: flex;
-            align-items: center;
-            margin-top: 20px;
-        }
-        .audio-container span {
-            margin-left: 20px;
-            font-weight: bold;
-            font-size: 1.2em;
-        }
-        .back-to-top {
-            position: fixed;
-            bottom: 40px;
-            right: 40px;
-            display: none;
-        }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
@@ -116,7 +100,7 @@
     <div class="container playlist-container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-               
+                
                 <div class="now-playing">
                     <img id="nowPlayingImg" src="img/Butterfly.jpg" alt="Now Playing">
                     <div class="now-playing-info">
@@ -124,13 +108,10 @@
                         <div id="nowPlayingArtist">yuiko</div>
                     </div>
                 </div>
-                <div class="audio-container">
-                    <audio id="audioPlayer" controls autoplay style="width: 100%; height: 50px; border-radius: 12px;">
-                        <source src="mp3/Butterfly.mp3" type="audio/mp3">
-                        Your browser does not support the audio element.
-                    </audio>
-                    <span id="trackIdDisplay">1</span>
-                </div>
+                <audio id="audioPlayer" controls autoplay style="width: 100%; height: 50px; border-radius: 12px;">
+                    <source src="mp3/Butterfly.mp3" type="audio/mp3">
+                    Your browser does not support the audio element.
+                </audio>
                 <ul id="playlist">
                     <!-- 播放列表 -->
                 </ul>
@@ -157,10 +138,6 @@
             </div>
         </div>
     </footer>
-    <!-- Back to top button -->
-<button class="back-to-top btn btn-primary">
-    <i class="fa fa-arrow-up"></i>
-    </button>
     <!-- jQuery -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <!-- Bootstrap Core JavaScript -->
@@ -173,7 +150,6 @@
 
     <script>
         const audioPlayer = document.getElementById('audioPlayer');
-        const trackIdDisplay = document.getElementById('trackIdDisplay');
         const playlist = [
             { src: 'mp3/1.mp3', name: 'Butterfly', artist: 'yuiko', img: 'img/Butterfly.jpg' },
             { src: 'mp3/2.mp3', name: 'Hope Is the Thing With Feathers ｜ Honkai： Star Rail', artist: 'Robin (Chevy) - ', img: 'img/2.jpg' },
@@ -208,23 +184,18 @@
                     audioPlayer.src = playlist[currentTrack].src;
                     audioPlayer.play();
                     setMediaSession(playlist[currentTrack]);
-                    updateTrackIdDisplay(currentTrack);
                 });
                 navigator.mediaSession.setActionHandler('nexttrack', () => {
                     currentTrack = (currentTrack + 1) % playlist.length;
                     audioPlayer.src = playlist[currentTrack].src;
                     audioPlayer.play();
                     setMediaSession(playlist[currentTrack]);
-                    updateTrackIdDisplay(currentTrack);
                 });
             }
-        }
 
-        function updateTrackIdDisplay(trackIndex) {
-            trackIdDisplay.textContent = trackIndex + 1;
-            nowPlayingImg.src = playlist[trackIndex].img;
-            nowPlayingTitle.textContent = playlist[trackIndex].name;
-            nowPlayingArtist.textContent = playlist[trackIndex].artist;
+            nowPlayingImg.src = track.img;
+            nowPlayingTitle.textContent = track.name;
+            nowPlayingArtist.textContent = track.artist;
         }
 
         playlist.forEach((track, index) => {
@@ -261,7 +232,6 @@
                 audioPlayer.src = track.src;
                 audioPlayer.play();
                 setMediaSession(track);
-                updateTrackIdDisplay(index);
             });
             playlistElement.appendChild(li);
         });
@@ -274,27 +244,10 @@
             audioPlayer.src = playlist[currentTrack].src;
             audioPlayer.play();
             setMediaSession(playlist[currentTrack]);
-            updateTrackIdDisplay(currentTrack);
         });
 
         // 初始化顯示第一首歌曲的信息
         setMediaSession(playlist[currentTrack]);
-        updateTrackIdDisplay(currentTrack);
-        // Show/hide back-to-top button
-window.addEventListener('scroll', function() {
-var backToTopButton = document.querySelector('.back-to-top');
-if (window.scrollY > 300) {
-backToTopButton.style.display = 'block';
-} else {
-backToTopButton.style.display = 'none';
-}
-});
-
-// Scroll to top functionality
-document.querySelector('.back-to-top').addEventListener('click', function(e) {
-e.preventDefault();
-window.scrollTo({ top: 0, behavior: 'smooth' });
-});
     </script>
 </body>
 </html>
