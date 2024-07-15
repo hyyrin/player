@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Rin's Music Playlist</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Theme CSS -->
+    <link href="css/clean-blog.min.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <style>
+        .highlight {
+            background-color: rgb(0, 255, 242);
+            padding: 0 2px;
+        }
+        .playlist-container {
+            margin-left: 0; /* 將容器的左邊距設為0 */
+        }
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .playlist-item img {
+            margin-right: 20px;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .playlist-item span {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .playlist-item .info {
+            font-size: 0.7em;
+        }
+        .now-playing {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .now-playing img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .now-playing-info {
+            font-size: 1.2em;
+        }
+        .track-id {
+            margin-right: 20px;
+            font-weight: bold;
+        }
+        .audio-container {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .audio-container span {
+            margin-left: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: none;
+        }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Page Header -->
+    <header class="intro-header" style="background-image: url('img/a.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="page-heading">
+                        <h1>Rin's Music Playlist</h1>
+                        <hr class="small">
+                        <span class="subheading">Personal Music Playlist</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <div class="container playlist-container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+               
+                <div class="now-playing">
+                    <img id="nowPlayingImg" src="img/Butterfly.jpg" alt="Now Playing">
+                    <div class="now-playing-info">
+                        <div id="nowPlayingTitle">Butterfly</div>
+                        <div id="nowPlayingArtist">yuiko</div>
+                    </div>
+                </div>
+                <div class="audio-container">
+                    <audio id="audioPlayer" controls autoplay style="width: 100%; height: 50px; border-radius: 12px;">
+                        <source src="mp3/Butterfly.mp3" type="audio/mp3">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <span id="trackIdDisplay">1</span>
+                </div>
+                <ul id="playlist">
+                    <!-- 播放列表 -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        <li>
+                            <a href="https://github.com/Willntucsie">
+                                <span class="fa-stack fa-lg">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
+                                    <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Rin 2024</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Back to top button -->
+<button class="back-to-top btn btn-primary">
+    <i class="fa fa-arrow-up"></i>
+    </button>
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Contact Form JavaScript -->
+    <script src="js/jqBootstrapValidation.js"></script>
+    <script src="js/contact_me.js"></script>
+    <!-- Theme JavaScript -->
+    <script src="js/clean-blog.min.js"></script>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const trackIdDisplay = document.getElementById('trackIdDisplay');
+        const playlist = [

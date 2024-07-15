@@ -1,0 +1,116 @@
+];
+let currentTrack = 0;
+
+const playlistElement = document.getElementById('playlist');
+const colorThief = new ColorThief();
+const nowPlayingImg = document.getElementById('nowPlayingImg');
+const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+const nowPlayingArtist = document.getElementById('nowPlayingArtist');
+
+function setMediaSession(track) {
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: track.name,
+            artist: track.artist,
+            artwork: [
+                { src: track.img, sizes: '512x512', type: 'image/png' },
+            ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => { audioPlayer.play(); });
+        navigator.mediaSession.setActionHandler('pause', () => { audioPlayer.pause(); });
+        navigator.mediaSession.setActionHandler('previoustrack', () => {
+            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            audioPlayer.src = playlist[currentTrack].src;
+            audioPlayer.play();
+            setMediaSession(playlist[currentTrack]);
+            updateTrackIdDisplay(currentTrack);
+        });
+        navigator.mediaSession.setActionHandler('nexttrack', () => {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            audioPlayer.src = playlist[currentTrack].src;
+            audioPlayer.play();
+            setMediaSession(playlist[currentTrack]);
+            updateTrackIdDisplay(currentTrack);
+        });
+    }
+}
+
+function updateTrackIdDisplay(trackIndex) {
+    trackIdDisplay.textContent = trackIndex + 1;
+    nowPlayingImg.src = playlist[trackIndex].img;
+    nowPlayingTitle.textContent = playlist[trackIndex].name;
+    nowPlayingArtist.textContent = playlist[trackIndex].artist;
+}
+
+playlist.forEach((track, index) => {
+    const li = document.createElement('li');
+    li.className = 'playlist-item';
+
+    const img = document.createElement('img');
+    img.src = track.img;
+    img.alt = track.name;
+
+    const trackId = document.createElement('div');
+    trackId.className = 'track-id';
+    trackId.textContent = index + 1;
+
+    const span = document.createElement('span');
+    span.textContent = track.name;
+
+    const info = document.createElement('div');
+    info.className = 'info';
+    info.textContent = track.artist;
+
+    span.appendChild(info);
+    li.appendChild(trackId);
+    li.appendChild(img);
+    li.appendChild(span);
+    
+    img.addEventListener('load', () => {
+        const color = colorThief.getColor(img);
+        span.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+    });
+
+    li.addEventListener('click', () => {
+        currentTrack = index;
+        audioPlayer.src = track.src;
+        audioPlayer.play();
+        setMediaSession(track);
+        updateTrackIdDisplay(index);
+    });
+    playlistElement.appendChild(li);
+});
+
+audioPlayer.addEventListener('ended', function() {
+    currentTrack++;
+    if (currentTrack >= playlist.length) {
+        currentTrack = 0;
+    }
+    audioPlayer.src = playlist[currentTrack].src;
+    audioPlayer.play();
+    setMediaSession(playlist[currentTrack]);
+    updateTrackIdDisplay(currentTrack);
+});
+
+// 初始化顯示第一首歌曲的信息
+setMediaSession(playlist[currentTrack]);
+updateTrackIdDisplay(currentTrack);
+// Show/hide back-to-top button
+window.addEventListener('scroll', function() {
+var backToTopButton = document.querySelector('.back-to-top');
+if (window.scrollY > 300) {
+backToTopButton.style.display = 'block';
+} else {
+backToTopButton.style.display = 'none';
+}
+});
+
+// Scroll to top functionality
+document.querySelector('.back-to-top').addEventListener('click', function(e) {
+e.preventDefault();
+window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+</body>
+</html>

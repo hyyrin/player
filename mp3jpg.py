@@ -2,10 +2,6 @@ import os
 import subprocess
 
 def download_mp4(url, num):
-    #command = ['yt-dlp', '--output', os.path.join('%(title)s'), url]
-    #command = ['yt-dlp', url]
-    #command = ['yt-dlp', '--paths', output_dir, '-o', file_name, url]
-    
     command = [
         'yt-dlp',
         '--output', os.path.join("mp3", f'{num}'),
