@@ -29,12 +29,12 @@ def get_playlist_videos(playlist_url):
             return [video_link]
 
 # 測試程式碼
-playlist_url = 'https://youtube.com/playlist?list=PL1lvmDJ8mJgGxYYF_ptXBWIIxCeymri4w&si=1-A_WaogRCvVtuSt'  # 替換為你的播放清單 URL
+playlist_url = "https://youtube.com/playlist?list=OLAK5uy_n94GqZILkef2EQkKLHtKlPHwmEocbbi64&si=hJ0gzEbCPytMc2ZL"  # 替換為你的播放清單 URL
 try:
     video_links = get_playlist_videos(playlist_url)
     num = 1
     for link in video_links:
-        print(num, link)
+        print(link)
         num += 1
 except HttpError as e:
     print(f'HttpError occurred: {e}')

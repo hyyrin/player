@@ -21,13 +21,14 @@
             padding: 0 2px;
         }
         .playlist-container {
-            margin-left: 0; /* 將容器的左邊距設為0 */
+            margin-left: 0;
         }
         .playlist-item {
             display: flex;
             align-items: center;
             margin-bottom: 20px;
             font-size: 1.5em;
+            cursor: grab;
         }
         .playlist-item img {
             margin-right: 20px;
@@ -77,6 +78,13 @@
             right: 40px;
             display: none;
         }
+        .tag {
+            margin-left: 10px;
+            padding: 2px 5px;
+            background-color: gold;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
@@ -99,6 +107,10 @@
                     
                     <li>
                         <a href="post1/post1.html">精選100首</a>
+                    </li>
+                    
+                    <li>
+                        <a href="post2/post2.html">2024 夏番</a>
                     </li>
                     
                 </ul>
@@ -175,7 +187,7 @@
         const audioPlayer = document.getElementById('audioPlayer');
         const trackIdDisplay = document.getElementById('trackIdDisplay');
         const playlist = [{ src: 'mp3/1.mp3', name: 'Butterfly', artist: 'yuiko', img: 'img/Butterfly.jpg' },
-{ src: 'mp3/2.mp3', name: 'Hope Is the Thing With Feathers ｜ Honkai： Star Rail', artist: 'Robin (Chevy) - ', img: 'img/2.jpg' },
+{ src: 'mp3/2.mp3', name: 'Hope Is the Thing With Feathers ｜ Honkai： Star Rail', artist: 'Robin (Chevy) - ', img: 'img/2.jpg'},
 { src: 'mp3/3.mp3', name: 'Burning  (Official Music Video)', artist: '羊文学 -', img: 'img/3.jpg' },
 { src: 'mp3/4.mp3', name: 'ラズライト (Lazurite) feat.ゆある', artist: '*Luna', img: 'img/4.jpg' },
 { src: 'mp3/5.mp3', name: 'アトラクトライト (Attract Light) feat.ゆある', artist: '*Luna', img: 'img/5.jpg' },
@@ -234,6 +246,8 @@ function updateTrackIdDisplay(trackIndex) {
 playlist.forEach((track, index) => {
     const li = document.createElement('li');
     li.className = 'playlist-item';
+    li.draggable = true;
+    li.dataset.index = index;
 
     const img = document.createElement('img');
     img.src = track.img;
@@ -249,6 +263,13 @@ playlist.forEach((track, index) => {
     const info = document.createElement('div');
     info.className = 'info';
     info.textContent = track.artist;
+
+    if (track.tag) {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = track.tag;
+        info.appendChild(tag);
+    }
 
     span.appendChild(info);
     li.appendChild(trackId);
@@ -270,6 +291,64 @@ playlist.forEach((track, index) => {
     playlistElement.appendChild(li);
 });
 
+// 拖放功能
+let draggedItem = null;
+
+document.querySelectorAll('.playlist-item').forEach(item => {
+    item.addEventListener('dragstart', function(e) {
+        draggedItem = item;
+        setTimeout(() => {
+            item.style.display = 'none';
+        }, 0);
+    });
+
+    item.addEventListener('dragend', function(e) {
+        setTimeout(() => {
+            draggedItem.style.display = 'flex';
+            draggedItem = null;
+        }, 0);
+    });
+
+    item.addEventListener('dragover', function(e) {
+        e.preventDefault();
+    });
+
+    item.addEventListener('dragenter', function(e) {
+        e.preventDefault();
+        this.style.borderBottom = '2px solid #000';
+    });
+
+    item.addEventListener('dragleave', function(e) {
+        this.style.borderBottom = 'none';
+    });
+
+    item.addEventListener('drop', function(e) {
+        this.style.borderBottom = 'none';
+        if (draggedItem !== this) {
+            let allItems = [...document.querySelectorAll('.playlist-item')];
+            let currentIndex = allItems.indexOf(this);
+            let draggedIndex = allItems.indexOf(draggedItem);
+
+            if (currentIndex < draggedIndex) {
+                this.parentNode.insertBefore(draggedItem, this);
+            } else {
+                this.parentNode.insertBefore(draggedItem, this.nextSibling);
+            }
+
+            // 更新播放清單順序
+            const reorderedPlaylist = [];
+            document.querySelectorAll('.playlist-item').forEach((item, newIndex) => {
+                const oldIndex = parseInt(item.dataset.index, 10);
+                reorderedPlaylist.push(playlist[oldIndex]);
+                item.querySelector('.track-id').textContent = newIndex + 1;
+                item.dataset.index = newIndex;
+            });
+            playlist.length = 0;
+            Array.prototype.push.apply(playlist, reorderedPlaylist);
+        }
+    });
+});
+
 audioPlayer.addEventListener('ended', function() {
     currentTrack++;
     if (currentTrack >= playlist.length) {
@@ -284,20 +363,21 @@ audioPlayer.addEventListener('ended', function() {
 // 初始化顯示第一首歌曲的信息
 setMediaSession(playlist[currentTrack]);
 updateTrackIdDisplay(currentTrack);
+
 // Show/hide back-to-top button
 window.addEventListener('scroll', function() {
-var backToTopButton = document.querySelector('.back-to-top');
-if (window.scrollY > 300) {
-backToTopButton.style.display = 'block';
-} else {
-backToTopButton.style.display = 'none';
-}
+    var backToTopButton = document.querySelector('.back-to-top');
+    if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
 });
 
 // Scroll to top functionality
 document.querySelector('.back-to-top').addEventListener('click', function(e) {
-e.preventDefault();
-window.scrollTo({ top: 0, behavior: 'smooth' });
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 </script>
 </body>
