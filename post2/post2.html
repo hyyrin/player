@@ -77,6 +77,27 @@
             right: 40px;
             display: none;
         }
+        .tag {
+            margin-left: 10px;
+            padding: 2px 5px;
+            background-color: gold;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+        .audio-container button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.audio-container button:hover {
+    background-color: #555;
+}
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
@@ -98,8 +119,13 @@
                     </li>
                     
                     <li>
-                        <a href="post1.html">精選100首</a>
+                        <a href="../post1/post1.html">精選100首</a>
                     </li>
+
+                    <li>
+                        <a href="post2.html">Anime</a>
+                    </li>
+
                 </ul>
             </div>
         </div>
@@ -126,15 +152,17 @@
                 <div class="now-playing">
                     <img id="nowPlayingImg" src="img/1.jpg" alt="Now Playing">
                     <div class="now-playing-info">
-                        <div id="nowPlayingTitle">The Irregular at Magic High School Season 3 - Opening Full | "Shouted Serenade" by LiSA</div>
-                        <div id="nowPlayingArtist">LiSA</div>
+                        <div id="nowPlayingTitle" data-index="0"></div>
+                        <div id="nowPlayingArtist"></div>
                     </div>
                 </div>
                 <div class="audio-container">
+                    <button id="prevTrack">Prev</button>
                     <audio id="audioPlayer" controls autoplay style="width: 100%; height: 50px; border-radius: 12px;">
                         <source src="a/1.mp3" type="audio/mp3">
                         Your browser does not support the audio element.
                     </audio>
+                    <button id="nextTrack">Next</button>
                     <span id="trackIdDisplay">1</span>
                 </div>
                 <ul id="playlist">

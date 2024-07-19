@@ -77,6 +77,27 @@
             right: 40px;
             display: none;
         }
+        .tag {
+            margin-left: 10px;
+            padding: 2px 5px;
+            background-color: gold;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+        .audio-container button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.audio-container button:hover {
+    background-color: #555;
+}
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
@@ -102,7 +123,7 @@
                     </li>
 
                     <li>
-                        <a href="../post2/post2.html">2024 夏番</a>
+                        <a href="../yuiko/yuiko.html">Yuiko</a>
                     </li>
                     
                 </ul>
@@ -131,15 +152,17 @@
                 <div class="now-playing">
                     <img id="nowPlayingImg" src="img/1.jpg" alt="Now Playing">
                     <div class="now-playing-info">
-                        <div id="nowPlayingTitle">The Irregular at Magic High School Season 3 - Opening Full | "Shouted Serenade" by LiSA</div>
-                        <div id="nowPlayingArtist">LiSA</div>
+                        <div id="nowPlayingTitle" data-index="0"></div>
+                        <div id="nowPlayingArtist"></div>
                     </div>
                 </div>
                 <div class="audio-container">
+                    <button id="prevTrack">Prev</button>
                     <audio id="audioPlayer" controls autoplay style="width: 100%; height: 50px; border-radius: 12px;">
                         <source src="a/1.mp3" type="audio/mp3">
                         Your browser does not support the audio element.
                     </audio>
+                    <button id="nextTrack">Next</button>
                     <span id="trackIdDisplay">1</span>
                 </div>
                 <ul id="playlist">
@@ -248,7 +271,7 @@
 { src : 'a/Suzume.mp3', name: 'Suzume', artist: 'RADWIMPS/Toaka', img: 'a/Suzume.jpg' },
 { src : 'a/ヒトヒラのハナビラ.mp3', name: 'ヒトヒラのハナビラ', artist: 'Stereopony', img: 'a/ヒトヒラのハナビラ.jpg' },
 { src : 'a/Sign.mp3', name: 'Sign', artist: 'FLOW', img: 'a/Sign.jpg' },
-{ src : 'a/Is There Still Anything That Love Can Do?.mp3', name: 'Is There Still Anything That Love Can Do?', artist: 'RADWIMPS', img: 'a/Is There Still Anything That Love Can Do?.jpg' },
+{ src : 'a/Is There Still Anything That Love Can Do.mp3', name: 'Is There Still Anything That Love Can Do?', artist: 'RADWIMPS', img: 'a/Is There Still Anything That Love Can Do.jpg' },
 { src : 'a/青のすみか.mp3', name: '青のすみか', artist: 'Tatsuya Kitani', img: 'a/青のすみか.jpg' },
 { src : 'a/DADDY ! DADDY ! DO !.mp3', name: 'DADDY ! DADDY ! DO !', artist: 'Masayuki Suzuki/鈴木愛理', img: 'a/DADDY ! DADDY ! DO !.jpg' },
 { src : 'a/only my railgun.mp3', name: 'only my railgun', artist: 'fripSide', img: 'a/only my railgun.jpg' },
@@ -287,6 +310,31 @@ const nowPlayingImg = document.getElementById('nowPlayingImg');
 const nowPlayingTitle = document.getElementById('nowPlayingTitle');
 const nowPlayingArtist = document.getElementById('nowPlayingArtist');
 
+document.getElementById('prevTrack').addEventListener('click', () => {
+    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+    audioPlayer.src = playlist[currentTrack].src;
+    audioPlayer.play();
+    setMediaSession(playlist[currentTrack]);
+    updateTrackIdDisplay(currentTrack);
+});
+
+// 添加「下一首」按鈕的事件處理器
+document.getElementById('nextTrack').addEventListener('click', () => {
+    currentTrack = (currentTrack + 1) % playlist.length;
+    audioPlayer.src = playlist[currentTrack].src;
+    audioPlayer.play();
+    setMediaSession(playlist[currentTrack]);
+    updateTrackIdDisplay(currentTrack);
+});
+document.getElementById('nowPlayingTitle').addEventListener('click', () => {
+    const index = parseInt(document.getElementById('nowPlayingTitle').dataset.index, 10);
+    const targetElement = document.querySelector(`.playlist-item[data-index="${index}"]`);
+    
+    if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+});
+
 function setMediaSession(track) {
     if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata({
@@ -321,11 +369,14 @@ function updateTrackIdDisplay(trackIndex) {
     nowPlayingImg.src = playlist[trackIndex].img;
     nowPlayingTitle.textContent = playlist[trackIndex].name;
     nowPlayingArtist.textContent = playlist[trackIndex].artist;
+    nowPlayingTitle.dataset.index = trackIndex;
 }
 
 playlist.forEach((track, index) => {
     const li = document.createElement('li');
     li.className = 'playlist-item';
+    li.draggable = true;
+    li.dataset.index = index;
 
     const img = document.createElement('img');
     img.src = track.img;
@@ -341,6 +392,13 @@ playlist.forEach((track, index) => {
     const info = document.createElement('div');
     info.className = 'info';
     info.textContent = track.artist;
+
+    if (track.tag) {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = track.tag;
+        info.appendChild(tag);
+    }
 
     span.appendChild(info);
     li.appendChild(trackId);
@@ -358,8 +416,68 @@ playlist.forEach((track, index) => {
         audioPlayer.play();
         setMediaSession(track);
         updateTrackIdDisplay(index);
+
+       
     });
     playlistElement.appendChild(li);
+});
+
+// 拖放功能
+let draggedItem = null;
+
+document.querySelectorAll('.playlist-item').forEach(item => {
+    item.addEventListener('dragstart', function(e) {
+        draggedItem = item;
+        setTimeout(() => {
+            item.style.display = 'none';
+        }, 0);
+    });
+
+    item.addEventListener('dragend', function(e) {
+        setTimeout(() => {
+            draggedItem.style.display = 'flex';
+            draggedItem = null;
+        }, 0);
+    });
+
+    item.addEventListener('dragover', function(e) {
+        e.preventDefault();
+    });
+
+    item.addEventListener('dragenter', function(e) {
+        e.preventDefault();
+        this.style.borderBottom = '2px solid #000';
+    });
+
+    item.addEventListener('dragleave', function(e) {
+        this.style.borderBottom = 'none';
+    });
+
+    item.addEventListener('drop', function(e) {
+        this.style.borderBottom = 'none';
+        if (draggedItem !== this) {
+            let allItems = [...document.querySelectorAll('.playlist-item')];
+            let currentIndex = allItems.indexOf(this);
+            let draggedIndex = allItems.indexOf(draggedItem);
+
+            if (currentIndex < draggedIndex) {
+                this.parentNode.insertBefore(draggedItem, this);
+            } else {
+                this.parentNode.insertBefore(draggedItem, this.nextSibling);
+            }
+
+            // 更新播放清單順序
+            const reorderedPlaylist = [];
+            document.querySelectorAll('.playlist-item').forEach((item, newIndex) => {
+                const oldIndex = parseInt(item.dataset.index, 10);
+                reorderedPlaylist.push(playlist[oldIndex]);
+                item.querySelector('.track-id').textContent = newIndex + 1;
+                item.dataset.index = newIndex;
+            });
+            playlist.length = 0;
+            Array.prototype.push.apply(playlist, reorderedPlaylist);
+        }
+    });
 });
 
 audioPlayer.addEventListener('ended', function() {
@@ -376,20 +494,21 @@ audioPlayer.addEventListener('ended', function() {
 // 初始化顯示第一首歌曲的信息
 setMediaSession(playlist[currentTrack]);
 updateTrackIdDisplay(currentTrack);
+
 // Show/hide back-to-top button
 window.addEventListener('scroll', function() {
-var backToTopButton = document.querySelector('.back-to-top');
-if (window.scrollY > 300) {
-backToTopButton.style.display = 'block';
-} else {
-backToTopButton.style.display = 'none';
-}
+    var backToTopButton = document.querySelector('.back-to-top');
+    if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
 });
 
 // Scroll to top functionality
 document.querySelector('.back-to-top').addEventListener('click', function(e) {
-e.preventDefault();
-window.scrollTo({ top: 0, behavior: 'smooth' });
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 </script>
 </body>

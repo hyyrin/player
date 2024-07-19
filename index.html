@@ -85,6 +85,20 @@
             border-radius: 5px;
             font-size: 0.8em;
         }
+        .audio-container button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.audio-container button:hover {
+    background-color: #555;
+}
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
@@ -110,7 +124,7 @@
                     </li>
                     
                     <li>
-                        <a href="post2/post2.html">2024 夏番</a>
+                        <a href="yuiko/yuiko.html">Yuiko</a>
                     </li>
                     
                 </ul>
@@ -139,15 +153,17 @@
                 <div class="now-playing">
                     <img id="nowPlayingImg" src="img/Butterfly.jpg" alt="Now Playing">
                     <div class="now-playing-info">
-                        <div id="nowPlayingTitle">Butterfly</div>
+                        <div id="nowPlayingTitle" data-index="0">Butterfly</div>
                         <div id="nowPlayingArtist">yuiko</div>
                     </div>
                 </div>
                 <div class="audio-container">
+                    <button id="prevTrack">Prev</button>
                     <audio id="audioPlayer" controls autoplay style="width: 100%; height: 50px; border-radius: 12px;">
                         <source src="mp3/Butterfly.mp3" type="audio/mp3">
                         Your browser does not support the audio element.
                     </audio>
+                    <button id="nextTrack">Next</button>
                     <span id="trackIdDisplay">1</span>
                 </div>
                 <ul id="playlist">
@@ -191,13 +207,6 @@
 { src: 'mp3/3.mp3', name: 'Burning  (Official Music Video)', artist: '羊文学 -', img: 'img/3.jpg' },
 { src: 'mp3/4.mp3', name: 'ラズライト (Lazurite) feat.ゆある', artist: '*Luna', img: 'img/4.jpg' },
 { src: 'mp3/5.mp3', name: 'アトラクトライト (Attract Light) feat.ゆある', artist: '*Luna', img: 'img/5.jpg' },
-{ src: 'mp3/6.mp3', name: 'GLORIOUS DAYS', artist: '', img: 'img/6.jpg' },
-{ src: 'mp3/7.mp3', name: '東の空から始まる世界', artist: '', img: 'img/7.jpg' },
-{ src: 'mp3/8.mp3', name: 'Awake', artist: '', img: 'img/8.jpg' },
-{ src: 'mp3/9.mp3', name: 'Depressing', artist: '', img: 'img/9.jpg' },
-{ src: 'mp3/10.mp3', name: 'petit bonheur', artist: '', img: 'img/10.jpg' },
-{ src: 'mp3/11.mp3', name: '流星のパルス (feat. 星乃一歌 & 天馬咲希 & 望月穂波 & 日野森志歩 & MEIKO)', artist: '', img: 'img/11.jpg' },
-{ src: 'mp3/12.mp3', name: 'RAM WIRE 『僕らの手には何もないけど、』Music Video ・「象の背中」の城井文が描くショートアニメ', artist: '', img: 'img/12.jpg' },
 { src: 'mp3/13.mp3', name: 'Brave Shine', artist: '', img: 'img/13.jpg' },
 { src: 'mp3/14.mp3', name: '絶絶絶絶対聖域', artist: 'ano', img: 'img/14.jpg' },
 ];
@@ -208,6 +217,31 @@ const colorThief = new ColorThief();
 const nowPlayingImg = document.getElementById('nowPlayingImg');
 const nowPlayingTitle = document.getElementById('nowPlayingTitle');
 const nowPlayingArtist = document.getElementById('nowPlayingArtist');
+
+document.getElementById('prevTrack').addEventListener('click', () => {
+    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+    audioPlayer.src = playlist[currentTrack].src;
+    audioPlayer.play();
+    setMediaSession(playlist[currentTrack]);
+    updateTrackIdDisplay(currentTrack);
+});
+
+// 添加「下一首」按鈕的事件處理器
+document.getElementById('nextTrack').addEventListener('click', () => {
+    currentTrack = (currentTrack + 1) % playlist.length;
+    audioPlayer.src = playlist[currentTrack].src;
+    audioPlayer.play();
+    setMediaSession(playlist[currentTrack]);
+    updateTrackIdDisplay(currentTrack);
+});
+document.getElementById('nowPlayingTitle').addEventListener('click', () => {
+    const index = parseInt(document.getElementById('nowPlayingTitle').dataset.index, 10);
+    const targetElement = document.querySelector(`.playlist-item[data-index="${index}"]`);
+    
+    if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+});
 
 function setMediaSession(track) {
     if ('mediaSession' in navigator) {
@@ -243,6 +277,7 @@ function updateTrackIdDisplay(trackIndex) {
     nowPlayingImg.src = playlist[trackIndex].img;
     nowPlayingTitle.textContent = playlist[trackIndex].name;
     nowPlayingArtist.textContent = playlist[trackIndex].artist;
+    nowPlayingTitle.dataset.index = trackIndex;
 }
 
 playlist.forEach((track, index) => {
@@ -289,6 +324,8 @@ playlist.forEach((track, index) => {
         audioPlayer.play();
         setMediaSession(track);
         updateTrackIdDisplay(index);
+
+       
     });
     playlistElement.appendChild(li);
 });

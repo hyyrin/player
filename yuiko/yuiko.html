@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Rin's Music Playlist</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Theme CSS -->
+    <link href="../css/clean-blog.min.css" rel="stylesheet">
+    <!-- Custom Fonts -->
+    <link href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <style>
+        .highlight {
+            background-color: rgb(0, 255, 242);
+            padding: 0 2px;
+        }
+        .playlist-container {
+            margin-left: 0; /* 將容器的左邊距設為0 */
+        }
+        .playlist-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        .playlist-item img {
+            margin-right: 20px;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .playlist-item span {
+            flex-grow: 1;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .playlist-item .info {
+            font-size: 0.7em;
+        }
+        .now-playing {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .now-playing img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+        }
+        .now-playing-info {
+            font-size: 1.2em;
+        }
+        .track-id {
+            margin-right: 20px;
+            font-weight: bold;
+        }
+        .audio-container {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .audio-container span {
+            margin-left: 20px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            display: none;
+        }
+        .tag {
+            margin-left: 10px;
+            padding: 2px 5px;
+            background-color: gold;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+        .audio-container button {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.audio-container button:hover {
+    background-color: #555;
+}
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    Menu <i class="fa fa-bars"></i>
+                </button>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="../index.html">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="../post1/post1.html">精選100首</a>
+                    </li>
+
+                    <li>
+                        <a href="yuiko.html">Yuiko</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Page Header -->
+    <header class="intro-header" style="background-image: url('../img/b.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="page-heading">
+                        <h1>Rin's Music Playlist</h1>
+                        <hr class="small">
+                        <span class="subheading">Yuiko</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <div class="container playlist-container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+               
+                <div class="now-playing">
+                    <img id="nowPlayingImg" src="img/1.jpg" alt="Now Playing">
+                    <div class="now-playing-info">
+                        <div id="nowPlayingTitle" data-index="0"></div>
+                        <div id="nowPlayingArtist"></div>
+                    </div>
+                </div>
+                <div class="audio-container">
+                    <button id="prevTrack">Prev</button>
+                    <audio id="audioPlayer" controls autoplay style="width: 100%; height: 50px; border-radius: 12px;">
+                        <source src="a/1.mp3" type="audio/mp3">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <button id="nextTrack">Next</button>
+                    <span id="trackIdDisplay">1</span>
+                </div>
+                <ul id="playlist">
+                    <!-- 播放列表 -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <ul class="list-inline text-center">
+                        
+                    </ul>
+                    <p class="copyright text-muted">Copyright &copy; Rin 2024</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- Back to top button -->
+<button class="back-to-top btn btn-primary">
+    <i class="fa fa-arrow-up"></i>
+    </button>
+    <!-- jQuery -->
+    <script src="../vendor/jquery/jquery.min.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Contact Form JavaScript -->
+    <script src="../js/jqBootstrapValidation.js"></script>
+    <script src="../js/contact_me.js"></script>
+    <!-- Theme JavaScript -->
+    <script src="../js/clean-blog.min.js"></script>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const trackIdDisplay = document.getElementById('trackIdDisplay');
+        const playlist = [{ src: 'mp3/1.mp3', name: 'GLORIOUS DAYS', artist: 'yuiko', img: 'img/1.jpg' },
+{ src: 'mp3/2.mp3', name: 'He said．', artist: 'yuiko', img: 'img/2.jpg' },
+{ src: 'mp3/3.mp3', name: '東の空から始まる世界', artist: 'yuiko', img: 'img/3.jpg' },
+{ src: 'mp3/4.mp3', name: 'キミトユメミシ', artist: 'yuiko', img: 'img/4.jpg' },
+{ src: 'mp3/5.mp3', name: 'Awake', artist: 'yuiko', img: 'img/5.jpg' },
+{ src: 'mp3/6.mp3', name: 'Future will come', artist: 'yuiko', img: 'img/6.jpg' },
+{ src: 'mp3/7.mp3', name: 'in the Garden', artist: 'yuiko', img: 'img/7.jpg' },
+{ src: 'mp3/8.mp3', name: 'Depressing', artist: 'yuiko', img: 'img/8.jpg' },
+{ src: 'mp3/9.mp3', name: 'petit bonheur', artist: 'yuiko', img: 'img/9.jpg' },
+{ src: 'mp3/10.mp3', name: 'イナイセカイ', artist: 'yuiko', img: 'img/10.jpg' },
+{ src: 'mp3/11.mp3', name: 'fragile garden', artist: 'yuiko', img: 'img/11.jpg' },
+{ src: 'mp3/12.mp3', name: 'Butterfly', artist: 'yuiko', img: 'img/12.jpg' },
+{ src: 'mp3/13.mp3', name: 'Naked flyer', artist: 'yuiko', img: 'img/13.jpg' },
+{ src: 'mp3/14.mp3', name: 'Spring snow fragment', artist: 'yuiko', img: 'img/14.jpg' },
+{ src: 'mp3/15.mp3', name: 'Brand-new color!!', artist: 'yuiko', img: 'img/15.jpg' },
+{ src: 'mp3/16.mp3', name: 'STRUGGLES', artist: 'yuiko', img: 'img/16.jpg' },
+{ src: 'mp3/17.mp3', name: 'ひとつの願い', artist: 'yuiko', img: 'img/17.jpg' },
+{ src: 'mp3/18.mp3', name: '恋空', artist: 'yuiko', img: 'img/18.jpg' },
+{ src: 'mp3/19.mp3', name: 'Last message', artist: 'yuiko', img: 'img/19.jpg' },
+{ src: 'mp3/20.mp3', name: 'Primary World', artist: 'yuiko', img: 'img/20.jpg' },
+{ src: 'mp3/21.mp3', name: '彷徨える空', artist: 'yuiko', img: 'img/21.jpg' },
+{ src: 'mp3/22.mp3', name: '心音', artist: 'yuiko', img: 'img/22.jpg' },
+{ src: 'mp3/23.mp3', name: 'lost sorrow', artist: 'yuiko', img: 'img/23.jpg' },
+{ src: 'mp3/24.mp3', name: '翳り空', artist: 'yuiko', img: 'img/24.jpg' },
+{ src: 'mp3/25.mp3', name: 'Hope', artist: 'yuiko', img: 'img/25.jpg' },
+{ src: 'mp3/26.mp3', name: '僕らの色', artist: 'yuiko', img: 'img/26.jpg' },
+{ src: 'mp3/27.mp3', name: 'crossroad', artist: 'yuiko', img: 'img/27.jpg' },
+{ src: 'mp3/28.mp3', name: '小さな甘い恋', artist: 'yuiko', img: 'img/28.jpg' },
+{ src: 'mp3/29.mp3', name: 'マリーゴールド', artist: 'yuiko', img: 'img/29.jpg' },
+{ src: 'mp3/30.mp3', name: '心ノ約束', artist: 'yuiko', img: 'img/30.jpg' },
+{ src: 'mp3/31.mp3', name: '桜色の願い', artist: 'yuiko', img: 'img/31.jpg' },
+{ src: 'mp3/32.mp3', name: 'Last moment', artist: 'yuiko', img: 'img/32.jpg' },
+{ src: 'mp3/33.mp3', name: 'イノセンス', artist: 'yuiko', img: 'img/33.jpg' },
+{ src: 'mp3/34.mp3', name: 'my friend', artist: 'yuiko', img: 'img/34.jpg' },
+{ src: 'mp3/35.mp3', name: 'Keep Changing', artist: 'yuiko', img: 'img/35.jpg' },
+{ src: 'mp3/36.mp3', name: '窓辺のモノローグ', artist: 'yuiko', img: 'img/36.jpg' },
+{ src: 'mp3/37.mp3', name: 'Trust', artist: 'yuiko', img: 'img/37.jpg' },
+{ src: 'mp3/38.mp3', name: 'Unknown floater', artist: 'yuiko', img: 'img/38.jpg' },
+{ src: 'mp3/39.mp3', name: '人形ノ涙 -type yuiko- (Self Cover)', artist: 'yuiko', img: 'img/39.jpg' },
+{ src: 'mp3/40.mp3', name: 'All your reasons', artist: 'yuiko', img: 'img/40.jpg' },
+{ src: 'mp3/41.mp3', name: 'Sweets Weekend', artist: 'yuiko', img: 'img/41.jpg' },
+];
+let currentTrack = 0;
+
+const playlistElement = document.getElementById('playlist');
+const colorThief = new ColorThief();
+const nowPlayingImg = document.getElementById('nowPlayingImg');
+const nowPlayingTitle = document.getElementById('nowPlayingTitle');
+const nowPlayingArtist = document.getElementById('nowPlayingArtist');
+
+document.getElementById('prevTrack').addEventListener('click', () => {
+    currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+    audioPlayer.src = playlist[currentTrack].src;
+    audioPlayer.play();
+    setMediaSession(playlist[currentTrack]);
+    updateTrackIdDisplay(currentTrack);
+});
+
+// 添加「下一首」按鈕的事件處理器
+document.getElementById('nextTrack').addEventListener('click', () => {
+    currentTrack = (currentTrack + 1) % playlist.length;
+    audioPlayer.src = playlist[currentTrack].src;
+    audioPlayer.play();
+    setMediaSession(playlist[currentTrack]);
+    updateTrackIdDisplay(currentTrack);
+});
+document.getElementById('nowPlayingTitle').addEventListener('click', () => {
+    const index = parseInt(document.getElementById('nowPlayingTitle').dataset.index, 10);
+    const targetElement = document.querySelector(`.playlist-item[data-index="${index}"]`);
+    
+    if (targetElement) {
+        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+});
+
+function setMediaSession(track) {
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: track.name,
+            artist: track.artist,
+            artwork: [
+                { src: track.img, sizes: '512x512', type: 'image/png' },
+            ]
+        });
+
+        navigator.mediaSession.setActionHandler('play', () => { audioPlayer.play(); });
+        navigator.mediaSession.setActionHandler('pause', () => { audioPlayer.pause(); });
+        navigator.mediaSession.setActionHandler('previoustrack', () => {
+            currentTrack = (currentTrack - 1 + playlist.length) % playlist.length;
+            audioPlayer.src = playlist[currentTrack].src;
+            audioPlayer.play();
+            setMediaSession(playlist[currentTrack]);
+            updateTrackIdDisplay(currentTrack);
+        });
+        navigator.mediaSession.setActionHandler('nexttrack', () => {
+            currentTrack = (currentTrack + 1) % playlist.length;
+            audioPlayer.src = playlist[currentTrack].src;
+            audioPlayer.play();
+            setMediaSession(playlist[currentTrack]);
+            updateTrackIdDisplay(currentTrack);
+        });
+    }
+}
+
+function updateTrackIdDisplay(trackIndex) {
+    trackIdDisplay.textContent = trackIndex + 1;
+    nowPlayingImg.src = playlist[trackIndex].img;
+    nowPlayingTitle.textContent = playlist[trackIndex].name;
+    nowPlayingArtist.textContent = playlist[trackIndex].artist;
+    nowPlayingTitle.dataset.index = trackIndex;
+}
+
+playlist.forEach((track, index) => {
+    const li = document.createElement('li');
+    li.className = 'playlist-item';
+    li.draggable = true;
+    li.dataset.index = index;
+
+    const img = document.createElement('img');
+    img.src = track.img;
+    img.alt = track.name;
+
+    const trackId = document.createElement('div');
+    trackId.className = 'track-id';
+    trackId.textContent = index + 1;
+
+    const span = document.createElement('span');
+    span.textContent = track.name;
+
+    const info = document.createElement('div');
+    info.className = 'info';
+    info.textContent = track.artist;
+
+    if (track.tag) {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = track.tag;
+        info.appendChild(tag);
+    }
+
+    span.appendChild(info);
+    li.appendChild(trackId);
+    li.appendChild(img);
+    li.appendChild(span);
+    
+    img.addEventListener('load', () => {
+        const color = colorThief.getColor(img);
+        span.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+    });
+
+    li.addEventListener('click', () => {
+        currentTrack = index;
+        audioPlayer.src = track.src;
+        audioPlayer.play();
+        setMediaSession(track);
+        updateTrackIdDisplay(index);
+
+       
+    });
+    playlistElement.appendChild(li);
+});
+
+// 拖放功能
+let draggedItem = null;
+
+document.querySelectorAll('.playlist-item').forEach(item => {
+    item.addEventListener('dragstart', function(e) {
+        draggedItem = item;
+        setTimeout(() => {
+            item.style.display = 'none';
+        }, 0);
+    });
+
+    item.addEventListener('dragend', function(e) {
+        setTimeout(() => {
+            draggedItem.style.display = 'flex';
+            draggedItem = null;
+        }, 0);
+    });
+
+    item.addEventListener('dragover', function(e) {
+        e.preventDefault();
+    });
+
+    item.addEventListener('dragenter', function(e) {
+        e.preventDefault();
+        this.style.borderBottom = '2px solid #000';
+    });
+
+    item.addEventListener('dragleave', function(e) {
+        this.style.borderBottom = 'none';
+    });
+
+    item.addEventListener('drop', function(e) {
+        this.style.borderBottom = 'none';
+        if (draggedItem !== this) {
+            let allItems = [...document.querySelectorAll('.playlist-item')];
+            let currentIndex = allItems.indexOf(this);
+            let draggedIndex = allItems.indexOf(draggedItem);
+
+            if (currentIndex < draggedIndex) {
+                this.parentNode.insertBefore(draggedItem, this);
+            } else {
+                this.parentNode.insertBefore(draggedItem, this.nextSibling);
+            }
+
+            // 更新播放清單順序
+            const reorderedPlaylist = [];
+            document.querySelectorAll('.playlist-item').forEach((item, newIndex) => {
+                const oldIndex = parseInt(item.dataset.index, 10);
+                reorderedPlaylist.push(playlist[oldIndex]);
+                item.querySelector('.track-id').textContent = newIndex + 1;
+                item.dataset.index = newIndex;
+            });
+            playlist.length = 0;
+            Array.prototype.push.apply(playlist, reorderedPlaylist);
+        }
+    });
+});
+
+audioPlayer.addEventListener('ended', function() {
+    currentTrack++;
+    if (currentTrack >= playlist.length) {
+        currentTrack = 0;
+    }
+    audioPlayer.src = playlist[currentTrack].src;
+    audioPlayer.play();
+    setMediaSession(playlist[currentTrack]);
+    updateTrackIdDisplay(currentTrack);
+});
+
+// 初始化顯示第一首歌曲的信息
+setMediaSession(playlist[currentTrack]);
+updateTrackIdDisplay(currentTrack);
+
+// Show/hide back-to-top button
+window.addEventListener('scroll', function() {
+    var backToTopButton = document.querySelector('.back-to-top');
+    if (window.scrollY > 300) {
+        backToTopButton.style.display = 'block';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
+});
+
+// Scroll to top functionality
+document.querySelector('.back-to-top').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+</body>
+</html>
