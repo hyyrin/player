@@ -113,13 +113,14 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: #fff;
+            background-color: #fff; /* 默认背景色 */
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             padding: 10px;
             display: flex;
             align-items: center;
             justify-content: space-between; /* 添加此行以确保按钮和信息之间有足够的间距 */
+            transition: background-color 0.3s ease; /* 添加过渡效果 */
         }
 
         .fixed-audio-container img {
@@ -355,6 +356,8 @@ function updateTrackIdDisplay(trackIndex) {
     if (trackArtist) {
         trackArtist.textContent = playlist[trackIndex].artist;
     }
+    // 更新播放条背景色
+    updateAudioPlayerBackgroundColor(playlist[trackIndex].img);
 }
 
 playlist.forEach((track, index) => {
