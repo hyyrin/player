@@ -63,18 +63,28 @@
         }
         .audio-container {
             display: flex;
-            align-items: center;
-            margin-top: 20px;
+    align-items: center;
+    position: relative; /* 使子元素可以相对定位 */
+    margin-top: 20px;
         }
         .audio-container span {
             margin-left: 20px;
             font-weight: bold;
             font-size: 1.2em;
         }
+        .audio-container .back-to-top {
+    position: absolute;
+    right: 0;
+    margin: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
         .back-to-top {
             position: fixed;
-            bottom: 40px;
-            right: 40px;
+            bottom: 80px;
+            right: 30px;
             display: none;
         }
         .tag {
@@ -85,19 +95,62 @@
             font-size: 0.8em;
         }
         .audio-container button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px;
-    margin: 0 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 1em;
-}
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+        }
 
-.audio-container button:hover {
-    background-color: #555;
-}
+        .audio-container button:hover {
+            background-color: #555;
+        }
+        .fixed-audio-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* 添加此行以确保按钮和信息之间有足够的间距 */
+        }
+
+        .fixed-audio-container img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        .fixed-audio-container .track-info {
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+            font-size: 0.8em;
+        }
+
+        .fixed-audio-container .audio-controls {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .fixed-audio-container audio {
+            flex-grow: 1;
+            margin: 0 10px;
+        }
+        #trackIdDisplay {
+            font-size: 1em;
+            margin-left: 10px;
+        }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.2/color-thief.umd.js"></script>
@@ -145,32 +198,43 @@
         </div>
     </header>
     <!-- Main Content -->
+ 
     <div class="container playlist-container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-               
+            <!--
                 <div class="now-playing">
                     <img id="nowPlayingImg" src="img/Butterfly.jpg" alt="Now Playing">
                     <div class="now-playing-info">
-                        <div id="nowPlayingTitle" data-index="0">Butterfly</div>
+                       <div id="nowPlayingTitle" data-index="0">Butterfly</div> 
                         <div id="nowPlayingArtist">yuiko</div>
                     </div>
                 </div>
-                <div class="audio-container">
-                    <button id="prevTrack">Prev</button>
-                    <audio id="audioPlayer" controls autoplay style="width: 100%; height: 50px; border-radius: 12px;">
-                        <source src="mp3/Butterfly.mp3" type="audio/mp3">
-                        Your browser does not support the audio element.
-                    </audio>
-                    <button id="nextTrack">Next</button>
-                    <span id="trackIdDisplay">1</span>
-                </div>
+            -->
+            <h1>歌曲列表</h1>
                 <ul id="playlist">
-                    <!-- 播放列表 -->
+                    
                 </ul>
             </div>
         </div>
     </div>
+
+    <!-- 固定底部播放条 -->
+    <div class="fixed-audio-container">
+        <img id="nowPlayingImg" src="img/Butterfly.jpg" alt="Now Playing"> 
+        <div class="track-info">
+            <div id="nowPlayingTitle" data-index="0">Butterfly</div>
+            <div id="nowPlayingArtist">yuiko</div>
+        </div>
+        <div class="audio-controls">
+            <button id="prevTrack">Prev</button>
+            <audio id="audioPlayer" controls></audio>
+            <button id="nextTrack">Next</button>
+        </div>
+        <span id="trackIdDisplay">1</span>
+       
+    </div>
+   
     <!-- Footer -->
     <footer>
         <div class="container">
@@ -233,6 +297,7 @@ document.getElementById('nextTrack').addEventListener('click', () => {
     setMediaSession(playlist[currentTrack]);
     updateTrackIdDisplay(currentTrack);
 });
+
 document.getElementById('nowPlayingTitle').addEventListener('click', () => {
     const index = parseInt(document.getElementById('nowPlayingTitle').dataset.index, 10);
     const targetElement = document.querySelector(`.playlist-item[data-index="${index}"]`);
@@ -277,6 +342,19 @@ function updateTrackIdDisplay(trackIndex) {
     nowPlayingTitle.textContent = playlist[trackIndex].name;
     nowPlayingArtist.textContent = playlist[trackIndex].artist;
     nowPlayingTitle.dataset.index = trackIndex;
+
+    const trackImg = document.querySelector('.fixed-audio-container img');
+    if (trackImg) {
+        trackImg.src = playlist[trackIndex].img;
+    }
+    const trackTitle = document.querySelector('.fixed-audio-container .track-info div:nth-of-type(1)');
+    if (trackTitle) {
+        trackTitle.textContent = playlist[trackIndex].name;
+    }
+    const trackArtist = document.querySelector('.fixed-audio-container .track-info div:nth-of-type(2)');
+    if (trackArtist) {
+        trackArtist.textContent = playlist[trackIndex].artist;
+    }
 }
 
 playlist.forEach((track, index) => {
@@ -312,6 +390,8 @@ playlist.forEach((track, index) => {
     li.appendChild(img);
     li.appendChild(span);
     
+   
+
     img.addEventListener('load', () => {
         const color = colorThief.getColor(img);
         span.style.backgroundColor = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
@@ -328,6 +408,8 @@ playlist.forEach((track, index) => {
     });
     playlistElement.appendChild(li);
 });
+
+
 
 // 拖放功能
 let draggedItem = null;
